@@ -1,0 +1,19 @@
+Name:                BPMCalculator
+Version:             0.1
+Synopsis:            Beats per minute calculator
+Description:         Calculates the BPM based on CLI interaction (i.e. hitting enter)
+Stability:           Experimental
+Category:            Web
+Build-type:          Simple
+Cabal-version:       >=1.2
+
+Executable BPMCalculator
+  hs-source-dirs:    Source
+  main-is:           Main.hs
+
+  Build-depends:
+    base >= 4 && < 5,
+    time >= 1.2 && < 1.3,
+    containers >= 0.4 && < 0.5
+
+  ghc-options:       -Wall
