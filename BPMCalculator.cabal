@@ -1,5 +1,5 @@
 Name:                BPMCalculator
-Version:             0.1
+Version:             1.0
 Synopsis:            Beats per minute calculator
 Description:         Calculates the BPM based on CLI interaction (i.e. hitting enter)
 Stability:           Experimental

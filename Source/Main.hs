@@ -8,6 +8,8 @@ import Data.Time.Clock
 
 type Beats = DS.Seq UTCTime
 
+-- | Run a loop which waits for lines from stdin.
+-- It then calculates the BPM based on the delay between them.
 calculateBPM :: Beats -> IO ()
 calculateBPM beats = do
   let minimumBeatCount = 5
@@ -19,10 +21,11 @@ calculateBPM beats = do
       newBeats = (if tooLong then DS.drop 1 else id) extendedBeats
       oldTime DS.:< _ = DS.viewl newBeats
       -- difference between the oldest and the newest timestamp stored, in seconds
-      difference = (realToFrac (diffUTCTime newTime oldTime) :: Double) * (10.0 ** (- 12))
+      -- ensure that it is never zero by establishing a minimum of one millisecond
+      difference = max (realToFrac (diffUTCTime newTime oldTime) :: Double) (10.0 ** (-3))
       currentLength = DS.length newBeats
       beatCount = currentLength - 1
-      beatsPerMinute = ((fromIntegral beatCount :: Double) / difference) * 60
+      beatsPerMinute = round (((fromIntegral beatCount :: Double) / difference) * 60) :: Int
       gotEnough = currentLength >= minimumBeatCount
       beatsRequired = minimumBeatCount - currentLength
   putStrLn $ if gotEnough
@@ -31,4 +34,6 @@ calculateBPM beats = do
   calculateBPM newBeats
 
 main :: IO ()
-main = calculateBPM DS.empty
+main = do
+  putStrLn "Hit enter to start counting"
+  calculateBPM DS.empty
